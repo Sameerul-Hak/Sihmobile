@@ -11,12 +11,13 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://${localhost}:8000/u/login`, {
+      const response = await axios.post(`http://${localhost}/u/login`, {
         phoneNumber,
         password,   
       });
 
       if (response.data.message === 'success') {
+        // console.log(response.data.data);
         navigation.navigate('Maintab', { "userData":response.data.data });
       } else {
         console.error('Invalid credentials');

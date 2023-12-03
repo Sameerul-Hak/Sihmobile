@@ -13,7 +13,7 @@ const Chatpage = ({route}) => {
   const flatListRef = useRef(null);
 
   useEffect(() => {
-    axios.get(`http://${localhost}:8000/m/message`)
+    axios.get(`http://${localhost}/m/message`)
       .then(response => {
         setChatMessages(response.data.msg.reverse());
       })
@@ -26,7 +26,7 @@ const Chatpage = ({route}) => {
     const username = route.params.userData.name;
 
     if (message.trim() !== '') {
-      axios.post(`http://${localhost}:8000/m/message`, { name: username, message })
+      axios.post(`http://${localhost}/m/message`, { name: username, message })
         .then(response => {
           setChatMessages([{ name: username, message }, ...chatMessages]);
           setMessage('');

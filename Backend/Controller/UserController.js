@@ -4,9 +4,10 @@ exports.registerUser=(req,res)=>{
     const {name,phoneNumber,email,password}=req.body;
 
     User.create({name,phoneNumber,email,password})
-    .then(()=>{
+    .then((user)=>{
         res.json({
-            message:"sucess"
+            message:"sucess",
+            data:user
         })
     }).catch((e)=>{
         res.json({

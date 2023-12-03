@@ -12,7 +12,7 @@ const Register = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post(`http://${localhost}:8000/u/register`, {
+      const response = await axios.post(`http://${localhost}/u/register`, {
         name,
         phoneNumber,
         email,
@@ -20,7 +20,8 @@ const Register = ({ navigation }) => {
       });
 
       if (response.data.message === 'sucess') {
-        navigation.navigate('Maintab', { userData: response.data.data });
+        // console.log(response.data.data);
+        navigation.navigate('Maintab', { "userData": response.data.data });
           } else {
         console.error('Registration failed');
         setErrMsg(response.data.message);
