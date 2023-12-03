@@ -71,7 +71,7 @@ export default function Navigation() {
       >
         <Tab.Screen name="Chat" component={Chatpage} />
         <Tab.Screen name="Task" component={Taskpage} />
-        <Tab.Screen name="Home" component={MyHomeStack} />
+        <Tab.Screen name="Home" component={MyHomeStack} options={{headerShown:false}}/>
         <Tab.Screen name="Requirements" component={Requirement} />
         <Tab.Screen name="Safety" component={MysafetyStack} />
       </Tab.Navigator>
