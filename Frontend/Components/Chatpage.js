@@ -62,7 +62,7 @@ const Chatpage = () => {
         onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
       />
 
-      <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
+      <View behavior="padding" style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={message}
@@ -73,7 +73,7 @@ const Chatpage = () => {
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };
