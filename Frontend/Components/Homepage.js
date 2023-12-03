@@ -1,16 +1,66 @@
-import React, { useState } from 'react';
+
+import React, { useState ,useRef} from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import * as Location from "expo-location";
+import MapViewDirections from 'react-native-maps-directions';
 
 const Homepage = ({ navigation }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [isFullView, setIsFullView] = useState(true);
+  const mapRef = useRef(null);
+
+
+
+  const INITIAL_REGION = {
+    latitude: 37.33,
+    longitude: -122,
+    latitudeDelta: 2,
+    longitudeDelta: 2,
+  };
+  
+
+  const handleMyLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Location permission denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      if (mapRef.current && location) {
+        mapRef.current.animateToRegion({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        });
+      }
+    } catch (error) {
+      console.error("Error getting location:", error);
+    }
+  };
+
+  const nearbyLocations = [
+    { latitude: 37.35, longitude: -122.03 },
+    { latitude: 37.34, longitude: -122.02 },
+    { latitude: 37.32, longitude: -122.01 },
+    { latitude: 37.33, longitude: -122.05 },
+    { latitude: 37.36, longitude: -122.0 },
+  ];
+
+  const toggleView = () => {
+    setIsFullView((prev) => !prev);
+  };
 
   const daysInMonth = new Date(year, month, 0).getDate();
   const startDay = new Date(year, month - 1, 1).getDay();
 
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthNames = [
-      "January", "February", "March", "April", "May", "June",
+      "January", "Febr", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
 
@@ -62,9 +112,34 @@ const Homepage = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+
+    <View style={styles.container}>
+      <View style={styles.container}>
       {renderCalendar()}
-    </SafeAreaView>
+      </View>
+      <View style={isFullView ? styles.mapContainer : styles.mapContainerFull}>
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={INITIAL_REGION}
+          showsUserLocation
+        >
+          {nearbyLocations.map((marker, index) => (
+            <Marker key={index} coordinate={marker} />
+          ))}
+        </MapView>
+        <TouchableOpacity
+          style={styles.myLocationButton}
+          onPress={handleMyLocation}
+        >
+          <Text>My Location</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={toggleView} style={styles.toggleButton}>
+          <Text style={styles.toggleText}>{isFullView ? "Full View" : "Back"}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -118,6 +193,46 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 5,
     paddingTop: 5,
+    alignItems: "center",
+    paddingHorizontal: "2%",
+  },
+  mapContainer: {
+    width: "100%",
+    height: "50%",
+    backgroundColor: "#F5F5F5",
+    borderRadius: 2,
+    position: "relative",
+  },
+  mapContainerFull: {
+    width: "100%",
+    height: "90%",
+    backgroundColor: "#F5F5F5",
+    position: "relative",
+  },
+  map: {
+    flex: 1,
+    borderRadius: 10,
+  },
+  myLocationButton: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  toggleButton: {
+    position: "absolute",
+    bottom: 16,
+    left: 16,
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  toggleText: {
+    fontSize: 15,
   },
 });
 
