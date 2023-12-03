@@ -1,34 +1,73 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, FlatList } from 'react-native';
+import axios from 'axios';
+import localhost from '../Config';
+import moment from 'moment';
 
 const Chatpage = () => {
   const [message, setMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState([
-    { id: 1, message: 'Hello!', sender: 'user' },
-    { id: 2, message: 'Hi there!', sender: 'other' },
-    { id: 3, message: 'How are you?', sender: 'other' },
-  ]);
+  const [chatMessages, setChatMessages] = useState([]);
+
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    axios.get(`http://${localhost}:8000/m/message`)
+      .then(response => {
+        setChatMessages(response.data.msg.reverse());
+      })
+      .catch(error => {
+        console.error('Error fetching messages:', error);
+      });
+  }, []);
 
   const sendMessage = () => {
-    console.log('Message Sent:', message);
-    setMessage('');
+    const username = 'sameer';
+
+    if (message.trim() !== '') {
+      axios.post(`http://${localhost}:8000/m/message`, { name: username, message })
+        .then(response => {
+          setChatMessages([{ name: username, message }, ...chatMessages]);
+          setMessage('');
+        })
+        .catch(error => {
+          console.error('Error sending message:', error);
+        });
+    } else {
+      console.warn('Message cannot be empty');
+    }
+  };
+
+  const renderTime = (createdAt) => {
+    const timeAgo = moment(createdAt).fromNow();
+    return timeAgo;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.chatContainer}>
-        {chatMessages.map(chat => (
-          <View key={chat.id} style={[styles.messageContainer, chat.sender === 'user' ? styles.userMessage : styles.otherMessage]}>
-            <Text style={styles.messageText}>{chat.message}</Text>
+      <FlatList
+        ref={flatListRef}
+        data={chatMessages}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View style={[styles.messageContainer, item.name === 'sameer' ? styles.userMessage : styles.otherMessage]}>
+            <View style={styles.messageHeader}>
+              <Text style={item.name === "sameer" ? styles.userName : styles.nonuserName}>{item.name}</Text>
+              <Text style={styles.timeText}>{renderTime(item.createdAt)}</Text>
+            </View>
+            <Text style={styles.messageText}>{item.message}</Text>
           </View>
-        ))}
-      </ScrollView>
+        )}
+        contentContainerStyle={styles.chatContainer}
+        inverted
+        onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
+      />
+
       <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={message}
           onChangeText={text => setMessage(text)}
-          placeholder="Type your message.."
+          placeholder="Type your message..."
           multiline={true}
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
@@ -55,8 +94,25 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginBottom: 15,
   },
+  messageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
   messageText: {
     fontSize: 16,
+    color: 'black',
+  },
+  userName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: 'white',
+  },
+  nonuserName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
     color: 'black',
   },
   userMessage: {
@@ -65,6 +121,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 3,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
+    color:'white',
     elevation: 2,
   },
   otherMessage: {
@@ -76,14 +133,13 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderWidth: 1,
     borderColor: '#8A2BE2',
-    color:"black"
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width:'100%',
-    height:"14%",
+    paddingVertical: 10,
     paddingHorizontal: 15,
+    borderTopWidth: 1,
     borderTopColor: '#8A2BE2',
     backgroundColor: '#ffffff',
   },
@@ -111,6 +167,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  timeText: {
+    color: 'black',
+    paddingHorizontal:10,
+    fontSize: 12,
   },
 });
 
