@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -9,7 +8,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    // You can add any additional validation rules for phone numbers here
   },
   email: {
     type: String,
@@ -22,7 +20,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
 });
 
 const User = mongoose.model('User', userSchema);

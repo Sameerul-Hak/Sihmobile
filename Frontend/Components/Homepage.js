@@ -5,11 +5,13 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
 
-const Homepage = ({ navigation }) => {
+const Homepage = ({ navigation,route }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [isFullView, setIsFullView] = useState(true);
   const mapRef = useRef(null);
+  console.log("home page",route.params.userData);
+
 
 
 

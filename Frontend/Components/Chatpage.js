@@ -4,10 +4,12 @@ import axios from 'axios';
 import localhost from '../Config';
 import moment from 'moment';
 
-const Chatpage = () => {
+const Chatpage = ({route}) => {
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-
+  console.log("chat page",route.params.userData);
+  // const { userData } = route.params;
+  // console.log(userData);
   const flatListRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const Chatpage = () => {
   }, []);
 
   const sendMessage = () => {
-    const username = 'sameer';
+    const username = route.params.userData.name;
 
     if (message.trim() !== '') {
       axios.post(`http://${localhost}:8000/m/message`, { name: username, message })
@@ -49,9 +51,9 @@ const Chatpage = () => {
         data={chatMessages}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <View style={[styles.messageContainer, item.name === 'sameer' ? styles.userMessage : styles.otherMessage]}>
+          <View style={[styles.messageContainer, item.name === route.params.userData.name ? styles.userMessage : styles.otherMessage]}>
             <View style={styles.messageHeader}>
-              <Text style={item.name === "sameer" ? styles.userName : styles.nonuserName}>{item.name}</Text>
+              <Text style={item.name ===route.params.userData.name ? styles.userName : styles.nonuserName}>{item.name}</Text>
               <Text style={styles.timeText}>{renderTime(item.createdAt)}</Text>
             </View>
             <Text style={styles.messageText}>{item.message}</Text>

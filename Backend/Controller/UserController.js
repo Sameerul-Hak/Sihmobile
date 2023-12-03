@@ -20,13 +20,13 @@ exports.loginUser=(req,res)=>{
     User.findOne({ phoneNumber })
         .then(user => {
             if (!user) {
-                return res.json({ message: 'usernotfound' });
+                return res.json({ message: 'user not found' });
             }
 
             const isPasswordValid = password === user.password;
 
             if (!isPasswordValid) {
-                return res.json({ message: 'password' });
+                return res.json({ message: 'password is not correct' });
             }
 
             res.json({ message: 'success',data:user });

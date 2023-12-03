@@ -11,17 +11,22 @@ import Safetypage from './Components/Safetypage';
 import Homepage from './Components/Homepage';
 import Alertpage from './Components/Alertpage';
 import AdminMessage from './Components/AdminMessage';
+import Login from './Components/Login';
+import Register from './Components/Register';
 
 const Stack = createStackNavigator();
 
-function MyHomeStack() {
+function MyHomeStack({route}) {
+  const { userData } = route.params; 
   return (
     <Stack.Navigator screenOptions={
       {
         headerShown: false,
       }
     }>
-      <Stack.Screen name="Home" component={Homepage} />
+      <Stack.Screen name="Home" component={Homepage} 
+      initialParams={{ userData }}
+      />
       <Stack.Screen name="Alert" component={Alertpage}/>
       
     </Stack.Navigator>
@@ -40,41 +45,77 @@ function MysafetyStack() {
   );
 }
 
+
 const Tab = createBottomTabNavigator();
+function MainTab({ route }) {
+  const { userData } = route.params; 
+  return (
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+          
+        if (route.name === 'Chat') {
+          iconName = focused ? 'chatbox' : 'chatbox-outline';
+        } else if (route.name === 'Task') {
+          iconName = focused ? 'clipboard' : 'clipboard-outline';
+        } else if (route.name === 'Home') {
+          iconName = focused ? 'home' : 'home-outline';
+        } else if (route.name === 'Requirements') {
+          iconName = focused ? 'list' : 'list-outline';
+        } else if (route.name === 'Safety') {
+          iconName = focused ? 'shield' : 'shield-outline';
+        }
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+    })}
+      tabBarOptions={{
+        activeTintColor: 'blue',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen
+        name="Chat"
+        component={Chatpage}
+        initialParams={{ userData }}
+      />
+      <Tab.Screen
+        name="Task"
+        component={Taskpage}
+        initialParams={{ userData }}
+      />
+      <Tab.Screen
+        name="Home"
+        component={MyHomeStack}
+        options={{ headerShown: false }}
+        initialParams={{ userData }}
+      />
+      <Tab.Screen
+        name="Requirements"
+        component={Requirement}
+        initialParams={{ userData }}
+      />
+      <Tab.Screen
+        name="Safety"
+        component={MysafetyStack}
+        initialParams={{ userData }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-              
-            if (route.name === 'Chat') {
-              iconName = focused ? 'chatbox' : 'chatbox-outline';
-            } else if (route.name === 'Task') {
-              iconName = focused ? 'clipboard' : 'clipboard-outline';
-            } else if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Requirements') {
-              iconName = focused ? 'list' : 'list-outline';
-            } else if (route.name === 'Safety') {
-              iconName = focused ? 'shield' : 'shield-outline';
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'blue',
-          inactiveTintColor: 'gray', 
-        }}
-      >
-        <Tab.Screen name="Chat" component={Chatpage} />
-        <Tab.Screen name="Task" component={Taskpage} />
-        <Tab.Screen name="Home" component={MyHomeStack} options={{headerShown:false}}/>
-        <Tab.Screen name="Requirements" component={Requirement} />
-        <Tab.Screen name="Safety" component={MysafetyStack} />
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={
+      {
+        headerShown: false,
+      }
+    }>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register}/>      
+      <Stack.Screen name="Maintab" component={MainTab}/>      
+    </Stack.Navigator>
     </NavigationContainer>
   );
 }
