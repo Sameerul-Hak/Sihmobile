@@ -87,11 +87,11 @@ const Homepage = ({ navigation }) => {
       <View style={styles.card}>
         <View style={styles.monthSelector}>
           <TouchableOpacity onPress={handlePrevMonth}>
-            <Text>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}</Text>
+            <Text style={styles.month}>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}</Text>
           </TouchableOpacity>
-          <Text>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1))}</Text>
+          <Text style={styles.currMonth}>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1))}</Text>
           <TouchableOpacity onPress={handleNextMonth}>
-            <Text>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}</Text>
+            <Text style={styles.month}>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.daysHeader}>
@@ -115,7 +115,11 @@ const Homepage = ({ navigation }) => {
 
     <View style={styles.container}>
       <View style={styles.container}>
-      {renderCalendar()}
+      {isFullView && (
+        <View >
+          {renderCalendar()}
+        </View>
+      )}
       </View>
       <View style={isFullView ? styles.mapContainer : styles.mapContainerFull}>
         <MapView
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    
   },
   daysHeader: {
     flexDirection: 'row',
@@ -188,26 +193,44 @@ const styles = StyleSheet.create({
     width: '14.28%',
     height: 30,
     textAlign: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
+   
     borderRadius: 5,
     marginBottom: 5,
     paddingTop: 5,
     alignItems: "center",
     paddingHorizontal: "2%",
   },
+  month:{
+    fontSize:16
+  },
+  currMonth:{
+    fontSize:20,
+  },
   mapContainer: {
-    width: "100%",
+    width: "94%",
     height: "50%",
     backgroundColor: "#F5F5F5",
-    borderRadius: 2,
+    borderRadius: 10,
     position: "relative",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    bottom:18
   },
   mapContainerFull: {
     width: "100%",
     height: "90%",
     backgroundColor: "#F5F5F5",
     position: "relative",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    bottom:5
+    
   },
   map: {
     flex: 1,
