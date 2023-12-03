@@ -28,7 +28,7 @@ const Chatpage = () => {
           style={styles.input}
           value={message}
           onChangeText={text => setMessage(text)}
-          placeholder="Type your message..."
+          placeholder="Type your message.."
           multiline={true}
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
