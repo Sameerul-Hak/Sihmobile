@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Text, Touchable, TouchableOpacity, View,Button } from 'react-native';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icon library
 import Chatpage from './Components/Chatpage';
 import Requirement from './Components/Requirement';
 import Taskpage from './Components/Taskpage';
@@ -11,31 +11,17 @@ import Safetypage from './Components/Safetypage';
 import Homepage from './Components/Homepage';
 import Alertpage from './Components/Alertpage';
 
-// function HomeScreen({navigation}) {
-
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>Home!</Text>
-//       <Button
-//         title="Go to Details"
-//         onPress={() => navigation.navigate('Settings')}
-//       />    
-//     </View>
-//   );
-// }
-
-
 const Stack = createStackNavigator();
 
 function MyHomeStack() {
   return (
     <Stack.Navigator screenOptions={
-        {
-            headerShown:false,
-        }
+      {
+        headerShown: false,
+      }
     }>
       <Stack.Screen name="Home" component={Homepage} />
-        <Stack.Screen name="Alert" component={Alertpage}/>
+      <Stack.Screen name="Alert" component={Alertpage}/>
     </Stack.Navigator>
   );
 }
@@ -45,18 +31,35 @@ const Tab = createBottomTabNavigator();
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={
-        {
-            headerShownVisible:false,
-            // headerShownVisible:false
-        }
-      }>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+              
+            if (route.name === 'Chat') {
+              iconName = focused ? 'chatbox' : 'chatbox-outline';
+            } else if (route.name === 'Task') {
+              iconName = focused ? 'clipboard' : 'clipboard-outline';
+            } else if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Requirements') {
+              iconName = focused ? 'list' : 'list-outline';
+            } else if (route.name === 'Safety') {
+              iconName = focused ? 'shield' : 'shield-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'blue', // Change the color of the active tab
+          inactiveTintColor: 'gray', // Change the color of inactive tabs
+        }}
+      >
         <Tab.Screen name="Chat" component={Chatpage} />
         <Tab.Screen name="Task" component={Taskpage} />
         <Tab.Screen name="Home" component={MyHomeStack} />
         <Tab.Screen name="Requirements" component={Requirement} />
         <Tab.Screen name="Safety" component={Safetypage} />
-
       </Tab.Navigator>
     </NavigationContainer>
   );

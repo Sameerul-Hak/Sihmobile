@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
+import MapViewDirections from 'react-native-maps-directions';
+
 
 const Homepage = ({ navigation }) => {
   const [isFullView, setIsFullView] = useState(true);
@@ -13,6 +15,7 @@ const Homepage = ({ navigation }) => {
     latitudeDelta: 2,
     longitudeDelta: 2,
   };
+  
 
   const handleMyLocation = async () => {
     try {
