@@ -10,6 +10,7 @@ import Taskpage from './Components/Taskpage';
 import Safetypage from './Components/Safetypage';
 import Homepage from './Components/Homepage';
 import Alertpage from './Components/Alertpage';
+import AdminMessage from './Components/AdminMessage';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,19 @@ function MyHomeStack() {
     }>
       <Stack.Screen name="Home" component={Homepage} />
       <Stack.Screen name="Alert" component={Alertpage}/>
+      
+    </Stack.Navigator>
+  );
+}
+function MysafetyStack() {
+  return (
+    <Stack.Navigator screenOptions={
+      {
+        headerShown: false,
+      }
+    }>
+      <Stack.Screen name="Safety" component={Safetypage} />
+      <Stack.Screen name="Adminmessages" component={AdminMessage}/>      
     </Stack.Navigator>
   );
 }
@@ -51,15 +65,15 @@ export default function Navigation() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'blue', // Change the color of the active tab
-          inactiveTintColor: 'gray', // Change the color of inactive tabs
+          activeTintColor: 'blue',
+          inactiveTintColor: 'gray', 
         }}
       >
         <Tab.Screen name="Chat" component={Chatpage} />
         <Tab.Screen name="Task" component={Taskpage} />
         <Tab.Screen name="Home" component={MyHomeStack} />
         <Tab.Screen name="Requirements" component={Requirement} />
-        <Tab.Screen name="Safety" component={Safetypage} />
+        <Tab.Screen name="Safety" component={MysafetyStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );
