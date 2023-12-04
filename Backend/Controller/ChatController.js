@@ -4,6 +4,7 @@ exports.getmessage=(req,res)=>{
     Message.find().then((msg)=>{
         res.status(201).json({msg})
     }).catch((e)=>{
+        console.log(e);
         res.status(401).json({message:"error vanthuruchu"})
     })
 }

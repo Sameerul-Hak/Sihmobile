@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getAllMessages, postMessage } = require('../Controller/Adminmsgcontroller');
+const { getAllMessages, postMessage,userpostadmin,getAllMessagesforadmin, deletemsgfromuser } = require('../Controller/Adminmsgcontroller');
 
-// For posting a message
+// For posting a message from admin to user
 router.post('/postmessage', async (req, res) => {
   try {
     const savedMessage = await postMessage(req.body.user, req.body.message);
@@ -23,5 +23,16 @@ router.get('/getmessage/:userid', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-  
+//user post panrathuku eethu
+router.post("/userpostadmin",userpostadmin);
+router.get("/msgforadmin",getAllMessagesforadmin);
+router.post("/deletemsgfromuser",deletemsgfromuser);
 module.exports = router;
+
+
+// http://localhost:8000/a/postmessage
+// {
+//   "user":"656c38ed84fd0029d6313ccf",
+//   "message":"sample test admin message 2"
+
+// }

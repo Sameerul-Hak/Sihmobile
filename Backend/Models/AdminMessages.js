@@ -12,6 +12,10 @@ const messageSchema = new mongoose.Schema({
         type: Date,
         default: Date.now   ,
       },
+    isAdmin:{
+      type:Boolean,
+      default:false
+    }
 })
 
 const AdminMessage = mongoose.model('AdminMessage', messageSchema);
