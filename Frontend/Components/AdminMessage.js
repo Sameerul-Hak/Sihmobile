@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
+import Context from './Context';
+import axios from 'axios';
+import localhost from '../Config';
 
 const AdminMessage = () => {
-  const [adminMessages, setAdminMessages] = useState([
-    { id: 1, message: 'This is an admin message 1', createdAt: '2023-12-01T12:30:45' },
-    { id: 2, message: 'This is an admin message 2', createdAt: '2023-12-02T09:15:00' },
-    // Add more messages here...
-  ]);
+  const [adminMessages, setAdminMessages] = useState([]);
+  const {user,setuser}=useContext(Context);
 
-  // Function to calculate time difference in minutes
+  useEffect(()=>{
+    axios.get(`http://${localhost}/a/getmessage/${user.id}`).then((res)=>{
+      setAdminMessages(res.data);
+      console.log(res.data);
+    })
+  },[])
+
   const calculateTimeDifference = (createdAt) => {
     const currentTime = new Date();
     const messageTime = new Date(createdAt);
@@ -26,10 +32,17 @@ const AdminMessage = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    // Handle deletion of the message with the given ID
-    const updatedMessages = adminMessages.filter((message) => message.id !== id);
-    setAdminMessages(updatedMessages);
+  const handleDelete = (ids) => {
+    console.log(ids);
+    axios.post(`http://${localhost}/a/deletemsgfromuser`,{"userid":user.id,"messageid":ids} ).then((res)=>{
+      alert("deleted Admin message.")
+      const updatedMessages = adminMessages.filter((message) => message._id !== ids);
+      setAdminMessages(updatedMessages);
+    }).catch((e)=>{
+      console.log(e);
+      alert("Error Occured while Deleting");
+    })
+    // console.log(adminMessages);
   };
 
   return (
@@ -42,7 +55,7 @@ const AdminMessage = () => {
               {calculateTimeDifference(message.createdAt)}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => handleDelete(message.id)}>
+          <TouchableOpacity onPress={() => handleDelete(message._id)}>
             <FontAwesome name="trash" size={24} color="red" />
           </TouchableOpacity>
         </View>

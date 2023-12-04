@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import localhost from '../Config';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import Context from "../Components/Context";
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [errmsg, setErrMsg] = useState('');
+  const{user,setuser}=useContext(Context);
 
   const handleLogin = async () => {
     try {
@@ -17,7 +18,9 @@ const Login = ({ navigation }) => {
       });
 
       if (response.data.message === 'success') {
-        // console.log(response.data.data);
+        console.log('login page',response.data.data);
+        setuser({user:response.data.data.name,id:response.data.data._id});
+        // console.log(response.data.data._id);
         navigation.navigate('Maintab', { "userData":response.data.data });
       } else {
         console.error('Invalid credentials');
@@ -35,6 +38,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* <View><Text>{user}</Text></View> */}
       <Text style={styles.heading}>Login</Text>
       {errmsg ? <Text style={styles.error}>{errmsg}</Text> : null}
       <TextInput

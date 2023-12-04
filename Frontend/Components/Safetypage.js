@@ -1,12 +1,27 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import Context from './Context';
+import axios from 'axios';
+import localhost from '../Config';
 
 const Safetypage = ({ navigation }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState([]);
+  const {user,setuser}=useContext(Context);
+  const [adminmes,setadminmes]=useState([])
+  useEffect(()=>{
+    axios.get(`http://${localhost}/a/getmessage/${user.id}`).then((res)=>{
+      setadminmes(res.data);
+      console.log(res.data);
+    })
+  },[])
 
-  const [adminmes,setadminmes]=useState(["sam",'son','rom'])
   const sendmethod = () => {
-    alert('Message sent');
+    axios.post(`http://${localhost}/a/userpostadmin`,{"user":user.id,"message":message,"isAdmin":false}).then((res)=>{
+      alert('Message sent');
+    }).catch((e)=>{
+      
+      alert('Some error occured!');
+    })
   };
 
   const goToAdminMessages = () => {

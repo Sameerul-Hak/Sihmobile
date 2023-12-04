@@ -1,11 +1,14 @@
 
-import React, { useState ,useRef} from 'react';
+import React, { useState ,useRef, useContext} from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
+import Context from './Context';
 
 const Homepage = ({ navigation,route }) => {
+
+  const {user,setuser}=useContext(Context);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [isFullView, setIsFullView] = useState(true);
@@ -87,6 +90,7 @@ const Homepage = ({ navigation,route }) => {
   const renderCalendar = () => {
     return (
       <View style={styles.card}>
+        {/* <Text>{user.user}</Text> */}
         <View style={styles.monthSelector}>
           <TouchableOpacity onPress={handlePrevMonth}>
             <Text style={styles.month}>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}</Text>

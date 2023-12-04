@@ -1,10 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Navigation from './Navigation';
+import { createContext, useState } from 'react';
+import Context from './Components/Context';
 
 export default function App() {
+  const[user,setuser]=useState({user:"",id:""});
   return (
-    <Navigation/>
+    <Context.Provider value={{user,setuser}}>
+      <Navigation/>
+    </Context.Provider>
   );
 }
 
