@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "my-app",
+    "name": "SihMobile",
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -28,13 +28,19 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "package": "com.sameerulhak.myapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "dependencies": {
       "expo-location": "^13.0.4"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5d83504b-7593-4acb-af8b-e155b6fd221b"
+      }
     }
   }
 }
