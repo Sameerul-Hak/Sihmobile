@@ -2,6 +2,7 @@ const User=require("../Models/UserModel")
 
 exports.registerUser=(req,res)=>{
     const {name,phoneNumber,email,password}=req.body;
+    console.log(req.body)
 
     User.create({name,phoneNumber,email,password})
     .then((user)=>{
@@ -10,6 +11,7 @@ exports.registerUser=(req,res)=>{
             data:user
         })
     }).catch((e)=>{
+        console.log(e)
         res.json({
             error:e
         })

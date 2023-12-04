@@ -1,16 +1,25 @@
 
-import React, { useState ,useRef} from 'react';
+import React, { useState ,useRef ,useEffect} from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
 
+import wareHouseIcon from '../assets/Vectorware.png'
+import firstAidIon from '../assets/firstAid.png'
+import RestroomIcon from '../assets/restroom.png'
+import machineryIcon from '../assets/machinery.png'
+
 const Homepage = ({ navigation,route }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [isFullView, setIsFullView] = useState(true);
+  const [nearbyLocation, setNearbyLocations] = useState([]);
   const mapRef = useRef(null);
+
+  const warehoueIcon = require('../assets/Vectorware.png')
   console.log("home page",route.params.userData);
+ let loc  = null;
 
 
 
@@ -18,9 +27,11 @@ const Homepage = ({ navigation,route }) => {
   const INITIAL_REGION = {
     latitude: 37.33,
     longitude: -122,
-    latitudeDelta: 2,
-    longitudeDelta: 2,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    
   };
+   let nearbyLocations = null;
   
 
   const handleMyLocation = async () => {
@@ -33,25 +44,32 @@ const Homepage = ({ navigation,route }) => {
 
       let location = await Location.getCurrentPositionAsync({});
       if (mapRef.current && location) {
+        loc = location;
         mapRef.current.animateToRegion({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
+          latitudeDelta: 0.0005,
+          longitudeDelta: 0.0005,
         });
+         nearbyLocations = [
+          { latitude: loc?.coords?.latitude+0.00005, longitude: loc?.coords?.longitude+0.00006 },
+          { latitude: loc?.coords?.latitude-0.00011, longitude: loc?.coords?.longitude+0.00012 },
+          { latitude: loc?.coords?.latitude-0.00008, longitude: loc?.coords?.longitude-0.00011 },
+          { latitude: loc?.coords?.latitude+0.00015, longitude: loc?.coords?.longitude-0.00012 },
+          
+        ];
+        setNearbyLocations(nearbyLocations);
+        console.log(location.coords.latitude,location.coords.longitude,nearbyLocations)
+        
       }
     } catch (error) {
       console.error("Error getting location:", error);
     }
   };
-
-  const nearbyLocations = [
-    { latitude: 37.35, longitude: -122.03 },
-    { latitude: 37.34, longitude: -122.02 },
-    { latitude: 37.32, longitude: -122.01 },
-    { latitude: 37.33, longitude: -122.05 },
-    { latitude: 37.36, longitude: -122.0 },
-  ];
+  console.log(loc)
+   
+  console.log(loc)
+  console.log(nearbyLocations)
 
   const toggleView = () => {
     setIsFullView((prev) => !prev);
@@ -83,6 +101,22 @@ const Homepage = ({ navigation,route }) => {
     
     return monthNames[date.getMonth()];
   };
+  const customMapStyle = [
+  {
+    featureType: 'poi',
+    elementType: 'labels',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+];
+
+   useEffect(() => {
+    handleMyLocation(); // Get user's location on component mount
+    // You may want to add further logic or dependencies for this effect if necessary
+  }, []);
 
   const renderCalendar = () => {
     return (
@@ -117,6 +151,7 @@ const Homepage = ({ navigation,route }) => {
 
     <View style={styles.container}>
       <View style={styles.container}>
+        
       {isFullView && (
         <View >
           {renderCalendar()}
@@ -130,17 +165,32 @@ const Homepage = ({ navigation,route }) => {
           provider={PROVIDER_GOOGLE}
           initialRegion={INITIAL_REGION}
           showsUserLocation
+          customMapStyle={customMapStyle}
         >
-          {nearbyLocations.map((marker, index) => (
-            <Marker key={index} coordinate={marker} />
-          ))}
+         {nearbyLocation && nearbyLocation.length > 0 &&
+            nearbyLocation.map((marker, index) => {
+              console.log("Marker:", marker); // Log the marker here
+              let iconImage ;
+                switch (index) {
+                  case 0:
+                    iconImage = wareHouseIcon;
+                    break;
+                  case 1:
+                    iconImage = firstAidIon;
+                    break;
+                  case 2:
+                    iconImage = RestroomIcon;
+                    break;
+                  case 3:
+                    iconImage = machineryIcon;
+                    break;
+}
+              return (
+                <Marker key={index} coordinate={marker} icon={iconImage}/>
+              );
+            })}
         </MapView>
-        <TouchableOpacity
-          style={styles.myLocationButton}
-          onPress={handleMyLocation}
-        >
-          <Text>My Location</Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity onPress={toggleView} style={styles.toggleButton}>
           <Text style={styles.toggleText}>{isFullView ? "Full View" : "Back"}</Text>
         </TouchableOpacity>
@@ -152,7 +202,7 @@ const Homepage = ({ navigation,route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 25 : 0,
+    paddingTop: Platform.OS === 'android' ? 5 : 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -171,6 +221,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    borderBottomWidth:2,
+    borderBottomColor:'#D3D3D3'
     
   },
   daysHeader: {
@@ -203,10 +255,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: "2%",
   },
   month:{
-    fontSize:16
+    fontSize:16,
+    color:'#E5E4E2'
   },
   currMonth:{
     fontSize:20,
+    color:'#9E6EB1'
+
   },
   mapContainer: {
     width: "94%",
@@ -249,9 +304,10 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: "absolute",
-    bottom: 16,
-    left: 16,
-    backgroundColor: "#fff",
+    bottom: 6,
+    left: 5,
+    backgroundColor: "#87CEEB",
+    color:"#000",
     padding: 8,
     borderRadius: 5,
     elevation: 3,
@@ -259,6 +315,13 @@ const styles = StyleSheet.create({
   toggleText: {
     fontSize: 15,
   },
+  headerText:{
+    fontSize:23,
+    marginBottom:5,
+    fontFamily:'bold',
+    color:'#630330'
+
+  }
 });
 
 export default Homepage;

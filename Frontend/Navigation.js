@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { View } from 'react-native';
+import { View ,TouchableOpacity,Text,Image} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icon library
 import Chatpage from './Components/Chatpage';
 import Requirement from './Components/Requirement';
 import Taskpage from './Components/Taskpage';
@@ -13,8 +13,29 @@ import Alertpage from './Components/Alertpage';
 import AdminMessage from './Components/AdminMessage';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MenuIcon from './assets/menuIcon.png'
+import ProfileIcon from './assets/profilepng.png'
 
 const Stack = createStackNavigator();
+
+const HeaderComponent = ({ navigation }) => {
+  return (
+    <SafeAreaView style={{ backgroundColor: 'white' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20,paddingVertical:10 }}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Image source={require('./assets/menuIcon.png')} style={{ width: 40, height: 40 }} />
+        </TouchableOpacity>
+        
+        <Text style={{ fontWeight: 'bold', fontSize: 22, color: '#9E6EB1', marginVertical: 5 }}>Stone Paper Scissor</Text>
+        
+        <View>
+          <Image source={require('./assets/profilepng.png')} style={{ width: 40, height: 40 }} />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 function MyHomeStack({route}) {
   const { userData } = route.params; 
@@ -87,7 +108,7 @@ function MainTab({ route }) {
       <Tab.Screen
         name="Home"
         component={MyHomeStack}
-        options={{ headerShown: false }}
+        options={{headerShown:false}}
         initialParams={{ userData }}
       />
       <Tab.Screen
@@ -107,14 +128,17 @@ function MainTab({ route }) {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={
-      {
-        headerShown: false,
-      }
-    }>
+      <Stack.Navigator 
+    >
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register}/>      
-      <Stack.Screen name="Maintab" component={MainTab}/>      
+      <Stack.Screen name="Register" component={Register}/>  
+      <Stack.Screen 
+          name="Maintab" 
+          component={MainTab}
+          options={({ navigation }) => ({
+            header: () => <HeaderComponent navigation={navigation} />,
+          })}
+        />     
     </Stack.Navigator>
     </NavigationContainer>
   );

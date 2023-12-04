@@ -12,12 +12,17 @@ const Register = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
+      console.log("hiii", name,
+        phoneNumber,
+        email,
+        password,localhost)
       const response = await axios.post(`http://${localhost}/u/register`, {
         name,
         phoneNumber,
         email,
         password,
       });
+      console.log(response.data);
 
       if (response.data.message === 'sucess') {
         // console.log(response.data.data);

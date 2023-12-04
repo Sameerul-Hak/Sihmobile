@@ -10,11 +10,13 @@ const Login = ({ navigation }) => {
   const [errmsg, setErrMsg] = useState('');
 
   const handleLogin = async () => {
+    console.log("jjjj")
     try {
       const response = await axios.post(`http://${localhost}/u/login`, {
         phoneNumber,
         password,   
       });
+      
 
       if (response.data.message === 'success') {
         // console.log(response.data.data);

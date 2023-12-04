@@ -1,5 +1,6 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import {Audio} from 'expo-av'
 
 const Safetypage = ({ navigation }) => {
   const [message, setMessage] = useState('');
@@ -12,6 +13,17 @@ const Safetypage = ({ navigation }) => {
   const goToAdminMessages = () => {
     navigation.navigate('Adminmessages');
   };
+
+      const playSound = async () => {
+      try {
+        const soundObject = new Audio.Sound();
+        await soundObject.loadAsync(require('../assets/emergencyAlarm.mp3')); 
+        await soundObject.playAsync();
+      } catch (error) {
+        console.error('Error playing sound: ', error);
+        }
+      };
+
 
   return (
     <View style={styles.cont}>
