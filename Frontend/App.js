@@ -12,7 +12,7 @@ export default function App() {
     </Context.Provider>
   );
 }
-
+// 5d83504b-7593-4acb-af8b-e155b6fd221b
 const styles = StyleSheet.create({
   container: {
     flex: 1,
