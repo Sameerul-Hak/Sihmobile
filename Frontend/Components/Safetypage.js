@@ -1,13 +1,15 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import Context from './Context';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 import localhost from '../Config';
 
 const Safetypage = ({ navigation }) => {
   const [message, setMessage] = useState([]);
   const {user,setuser}=useContext(Context);
-  const [adminmes,setadminmes]=useState([])
+  const [adminmes,setadminmes]=useState([]);
+
   useEffect(()=>{
     axios.get(`http://${localhost}/a/getmessage/${user.id}`).then((res)=>{
       setadminmes(res.data);
@@ -17,8 +19,9 @@ const Safetypage = ({ navigation }) => {
 
   const sendmethod = () => {
     axios.post(`http://${localhost}/a/userpostadmin`,{"user":user.id,"message":message,"isAdmin":false}).then((res)=>{
-      alert('Message sent');
-    }).catch((e)=>{
+      ToastAndroid.show('Message sent successfully!', ToastAndroid.SHORT);
+
+  }).catch((e)=>{
       
       alert('Some error occured!');
     })
@@ -67,6 +70,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     flex: 1,
+    height:40,
     borderWidth: 1,
     borderColor: '#8A2BE2',
     margin: 10,

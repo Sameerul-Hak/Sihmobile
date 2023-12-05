@@ -19,7 +19,11 @@ const Login = ({ navigation }) => {
 
       if (response.data.message === 'success') {
         console.log('login page',response.data.data);
-        setuser({user:response.data.data.name,id:response.data.data._id});
+        if(response.data.data.isAdmin=="true" && response.data.data.isSite=="true" )setuser({user:response.data.data.name,id:response.data.data._id,isSite:response.data.data.isSite,isAdmin:response.data.data.isAdmin});
+        else if(response.data.data.isSite=="true")setuser({user:response.data.data.name,id:response.data.data._id,isSite:response.data.data.isSite});
+         else if(response.data.data.isAdmin=="true")setuser({user:response.data.data.name,id:response.data.data._id,isAdmin:response.data.data.isAdmin});
+        else setuser({user:response.data.data.name,id:response.data.data._id})
+        
         // console.log(response.data.data._id);
         navigation.navigate('Maintab', { "userData":response.data.data });
       } else {

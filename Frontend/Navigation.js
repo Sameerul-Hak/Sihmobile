@@ -13,6 +13,7 @@ import Alertpage from './Components/Alertpage';
 import AdminMessage from './Components/AdminMessage';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import TaskRequest from './Components/TaskRequest';
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,19 @@ function MysafetyStack() {
       }
     }>
       <Stack.Screen name="Safety" component={Safetypage} />
-      <Stack.Screen name="Adminmessages" component={AdminMessage}/>      
+  <Stack.Screen name="Adminmessages" component={AdminMessage}/>      
+    </Stack.Navigator>
+  );
+}
+function MyTaskStack() {
+  return (
+    <Stack.Navigator screenOptions={
+      {
+        headerShown: false,
+      }
+    }>
+      <Stack.Screen name="Task" component={Taskpage} />
+      <Stack.Screen name="TaskRequest" component={TaskRequest}/>      
     </Stack.Navigator>
   );
 }
@@ -81,7 +94,7 @@ function MainTab({ route }) {
       />
       <Tab.Screen
         name="Task"
-        component={Taskpage}
+        component={MyTaskStack}
         initialParams={{ userData }}
       />
       <Tab.Screen

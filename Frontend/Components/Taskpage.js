@@ -1,12 +1,42 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, ToastAndroid, Button } from 'react-native'
 import React, { useContext } from 'react'
 import taskimg from "../assets/8454.jpg";
 import Context from './Context';
+import Toast from 'react-native-toast-message'
+import localhost from '../Config';
+import axios from 'axios';
 
-const Taskpage = () => {
+const Taskpage = ({navigation}) => {
+  const showToast = (text) => {
+    console.log(`toast`);
+    ToastAndroid.show(text, ToastAndroid.SHORT);
+  }
+  const sendRequest = async () => {
+    try {
+      const url = `http://${localhost}/s/sites`; 
+    
+      const response = await axios.post(url,{
+        "user": user.id 
+      });
+      // console.log(response);
+      showToast("Request sent successfully"); 
+    } catch (error) {
+      // console.log(error);
+      showToast("Failed to send request!"); 
+      
+    }
+  };
+
+  const swithpage=()=>{
+    navigation.navigate('TaskRequest');
+  }
+
+
   const {user,setuser}=useContext(Context);
   return (
-    <View style={styles.container}>
+      <View style={styles.container}>
+        {user.isSite!="true"?   <View style={styles.container}>
+      <Text>{user.id}</Text>
       <Image source={taskimg} style={styles.taskimg} />
       <View style={styles.taskbox}>
         <Text style={styles.taskTitle}>Hello {user.user} :)</Text>
@@ -21,10 +51,15 @@ const Taskpage = () => {
           PhoneNumber: 9944012249
         </Text>
         <View style={styles.round}>
-          <Text style={styles.completedText}>Request</Text>
+          <Text style={styles.completedText} onPress={sendRequest}>Request</Text>
         </View>
       </View>
-    </View>
+    </View>:
+    <View style={styles.container}>
+      <Image source={taskimg} style={styles.taskimg} />
+      <Button title="Check Request" onPress={swithpage}/>
+    </View>}
+      </View>
   )
 }
 
@@ -94,6 +129,7 @@ const styles = StyleSheet.create({
   completedText: {
     fontWeight: 'bold',
   },
+
 })
 
 export default Taskpage
