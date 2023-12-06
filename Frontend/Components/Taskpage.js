@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   completedText: {
     fontWeight: 'bold',
   },
-
 })
 
 export default Taskpage

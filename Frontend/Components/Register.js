@@ -23,7 +23,7 @@ const Register = ({ navigation }) => {
       });
 
       if (response.data.message === 'sucess') {
-        // console.log(response.data.data);
+        console.log(response.data.data);
         navigation.navigate('Maintab', { "userData": response.data.data });
           } else {
         console.error('Registration failed');
