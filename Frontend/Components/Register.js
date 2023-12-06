@@ -13,14 +13,17 @@ const Register = ({ navigation }) => {
   const handleRegister = async () => {
     try {
       const response = await axios.post(`http://${localhost}/u/register`, {
-        name,
-        phoneNumber,
-        email,
-        password,
+        "name":name,
+        "phoneNumber":phoneNumber,
+        "email":email,
+        "password":password,
+        "isAdmin":false,
+        "isSite":false
+
       });
 
       if (response.data.message === 'sucess') {
-        // console.log(response.data.data);
+        console.log(response.data.data);
         navigation.navigate('Maintab', { "userData": response.data.data });
           } else {
         console.error('Registration failed');

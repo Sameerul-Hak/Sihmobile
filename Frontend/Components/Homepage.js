@@ -5,6 +5,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
 import Context from './Context';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Homepage = ({ navigation,route }) => {
 
@@ -16,7 +17,7 @@ const Homepage = ({ navigation,route }) => {
   console.log("home page",route.params.userData);
 
 
-
+  console.log(user);
 
   const INITIAL_REGION = {
     latitude: 37.33,
@@ -90,7 +91,10 @@ const Homepage = ({ navigation,route }) => {
   const renderCalendar = () => {
     return (
       <View style={styles.card}>
-        {/* <Text>{user.user}</Text> */}
+        {/* <Text>{user.user}</Text>
+        <Text>{user.isAdmin=="true"? <Text>admin </Text>:<Text>not admin </Text>}</Text>
+        <Text>{user.isSite=="true"? <Text>site </Text>:<Text>not site </Text>}</Text> */}
+        {/* <Text>{user.isSite}</Text> */}
         <View style={styles.monthSelector}>
           <TouchableOpacity onPress={handlePrevMonth}>
             <Text style={styles.month}>{getMonthName(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}</Text>

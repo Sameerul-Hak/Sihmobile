@@ -1,9 +1,9 @@
 const User=require("../Models/UserModel")
 
 exports.registerUser=(req,res)=>{
-    const {name,phoneNumber,email,password}=req.body;
+    const {name,phoneNumber,email,password,isAdmin,isSite}=req.body;
 
-    User.create({name,phoneNumber,email,password})
+    User.create({name,phoneNumber,email,password,isAdmin,isSite})
     .then((user)=>{
         res.json({
             message:"sucess",
