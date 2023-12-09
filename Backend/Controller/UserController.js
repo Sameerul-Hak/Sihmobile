@@ -1,20 +1,46 @@
 const User=require("../Models/UserModel")
 
-exports.registerUser=(req,res)=>{
-    const {name,phoneNumber,email,password,isAdmin,isSite}=req.body;
+exports.registerUser = (req, res) => {
+    const {
+        name,
+        phoneNumber,
+        email,
+        password,
+        isAdmin,
+        isSite,
+        experience,
+        expert,
+        expectedPay,
+        gender,
+        previousProjects
+    } = req.body;
 
-    User.create({name,phoneNumber,email,password,isAdmin,isSite})
-    .then((user)=>{
-        res.json({
-            message:"sucess",
-            data:user
+    User.create({
+            name,
+            phoneNumber,
+            email,
+            password,
+            isAdmin,
+            isSite,
+            experience,
+            expert,
+            expectedPay,
+            gender,
+            previousProjects
         })
-    }).catch((e)=>{
-        res.json({
-            error:e
+        .then((user) => {
+            res.json({
+                message: "success",
+                data: user
+            });
         })
-    })
-}
+        .catch((e) => {
+            res.json({
+                error: e
+            });
+        });
+};
+
 exports.loginUser=(req,res)=>{
     const {phoneNumber,password}=req.body;
     console.log(phoneNumber,password)
@@ -36,6 +62,12 @@ exports.loginUser=(req,res)=>{
             console.error(error);
             res.json({ message: 'Server error' });
         });
-
-
+}
+exports.getalluser=(req,res)=>{
+    User.find().then((re)=>
+    {
+        return res.json({"Users":re});
+    }).catch((e)=>{
+        return res.json({"Users":"error bro"})
+    })
 }

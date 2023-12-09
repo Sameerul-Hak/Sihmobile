@@ -27,7 +27,26 @@ const userSchema = new mongoose.Schema({
   isSite:{
     type:String,
     default:false
-  }
+  },
+  experience:{
+    type:String,
+    default:""
+  },
+  expert:
+  {
+    type:String,
+    default:""
+  },
+  expectedPay:{
+    type:String,
+    default:1000
+  },
+  gender:{
+    type:String,
+  },
+  previousProjects:{
+    type:String,
+  },
 });
 
 const User = mongoose.model('User', userSchema);
